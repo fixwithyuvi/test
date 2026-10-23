@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FIXWITHYUVI – GSM Files</title>
+<title>FIXWITHYUVI</title>
 <style>
-:root{--bg:#0f1220;--card:#181c30;--tx:#e9ecff;--mu:#8b92b8;--ac:#4f8cff;--ok:#2ecc71;--bd:#272c4a}
-@media(prefers-color-scheme:light){:root{--bg:#f2f4fb;--card:#fff;--tx:#161a33;--mu:#5d6488;--bd:#dfe3f3}}
+:root{--bg:#0f1220;--card:#181c30;--card2:#20253f;--tx:#e9ecff;--mu:#8b92b8;--ac:#4f8cff;--ok:#2ecc71;--bad:#ff5c6c;--bd:#2c3253}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--tx)}
-header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--bd)}
-header b span{color:var(--ac)}main{max-width:900px;margin:0 auto;padding:18px}
-button,input{font:inherit}button{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer}
-button.alt{background:transparent;color:var(--tx);border:1px solid var(--bd)}button.ok{background:var(--ok)}
-input{width:100%;padding:11px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx);margin:6px 0}
-.login{max-width:340px;margin:12vh auto;background:var(--card);padding:24px;border-radius:14px;border:1px solid var(--bd);text-align:center}
-.err{color:#ff5c6c;min-height:20px;font-size:14px}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--bd);position:sticky;top:0;background:var(--bg);z-index:5}
+header b span{color:var(--ac)}header div{display:flex;gap:8px}
+main{max-width:920px;margin:0 auto;padding:18px 16px 110px}
+button{font:inherit;border:0;border-radius:8px;padding:8px 14px;cursor:pointer;background:var(--ac);color:#fff}
+button.alt{background:transparent;border:1px solid var(--bd);color:var(--tx)}button.alt:hover{border-color:var(--ac)}
+button.ok{background:var(--ok)}button.del{background:transparent;color:var(--bad);padding:6px 10px}
+button.big{padding:12px 22px;font-weight:600;background:var(--ok)}
+input{font:inherit;width:100%;padding:10px 11px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);margin:4px 0}
+input:focus{outline:none;border-color:var(--ac)}
+.box{max-width:360px;margin:9vh auto;background:var(--card);padding:24px;border-radius:14px;border:1px solid var(--bd);text-align:center}
+.box h3{margin-top:0}.box p{color:var(--mu);font-size:13px}
+.err{color:var(--bad);min-height:20px;font-size:14px}.hide{display:none!important}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:12px}
 .tile{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:18px 10px;text-align:center;cursor:pointer}
 .tile:hover{border-color:var(--ac)}.tile small{display:block;color:var(--mu);margin-top:4px}
@@ -20,60 +24,125 @@ input{width:100%;padding:11px;border-radius:8px;border:1px solid var(--bd);backg
 .file{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-top:12px}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
 .row code{flex:1;min-width:140px;overflow-wrap:anywhere;background:var(--bg);padding:7px 10px;border-radius:8px;font-size:13px}
-.hide{display:none}
+.brand{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:16px}
+.bh,.mh{display:flex;gap:8px;align-items:center}.bh input{font-size:17px;font-weight:600}
+.model{background:var(--card2);border-radius:12px;padding:12px;margin-top:12px}
+.ef{display:grid;grid-template-columns:1.1fr 2fr 1fr auto;gap:8px;margin-top:6px}
+.set{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:16px}
+.set label{font-size:13px;color:var(--mu)}.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--bd);padding:12px}
+.bar div{max-width:920px;margin:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+#st{flex:1;font-size:14px;color:var(--mu)}
+@media(max-width:640px){.ef,.g2{grid-template-columns:1fr}}
 </style></head><body>
-<header><b>FIX<span>WITH</span>YUVI</b><button class="alt hide" id="out">Logout</button></header>
+<header><b>FIX<span>WITH</span>YUVI</b>
+ <div><button class="alt hide" id="mng">⚙ Manage</button><button class="alt hide" id="out">Logout</button></div></header>
 <main>
-<div class="login" id="login">
+
+<form class="box hide" id="setup">
+ <h3>🛠 First-time Setup</h3>
+ <p>Create your login. Your data is saved encrypted in your GitHub repo.</p>
+ <input id="s_id" name="username" placeholder="Choose Login ID" autocomplete="username" autocapitalize="off">
+ <input id="s_pw" name="password" type="password" placeholder="Choose Password (10+ chars)" autocomplete="new-password">
+ <input id="s_repo" placeholder="GitHub repo (owner/repo)">
+ <input id="s_tok" type="password" placeholder="GitHub token" autocomplete="off">
+ <button type="submit" style="width:100%;margin-top:6px">Create</button>
+ <div class="err" id="s_err"></div>
+</form>
+
+<form class="box hide" id="login">
  <h3>🔒 Private Access</h3>
- <input id="uid" placeholder="ID">
- <input id="pw" type="password" placeholder="Password">
- <button id="go" style="width:100%;margin-top:6px">Login</button>
+ <input id="uid" name="username" placeholder="ID" autocomplete="username" autocapitalize="off" spellcheck="false">
+ <input id="pw" name="password" type="password" placeholder="Password" autocomplete="current-password">
+ <button type="submit" style="width:100%;margin-top:6px">Login</button>
  <div class="err" id="err"></div>
-</div>
+</form>
+
 <div id="app" class="hide">
  <input id="q" placeholder="Search…">
- <div class="crumb" id="crumb"></div>
- <div id="view"></div>
+ <div class="crumb" id="crumb"></div><div id="view"></div>
+</div>
+
+<div id="editor" class="hide">
+ <div class="set">
+  <b>GitHub &amp; Login settings</b>
+  <div class="g2">
+   <div><label>GitHub repo (owner/repo)</label><input id="e_repo"></div>
+   <div><label>GitHub token (needed to save)</label><input id="e_tok" type="password" autocomplete="off"></div>
+   <div><label>New Login ID (optional)</label><input id="e_nid" autocomplete="off"></div>
+   <div><label>New Password (optional)</label><input id="e_npw" type="password" autocomplete="new-password"></div>
+  </div>
+  <label><input type="checkbox" id="e_rem" style="width:auto"> Remember token on this device (stored encrypted)</label>
+ </div>
+ <button onclick="addBrand()">＋ Add Brand</button>
+ <div id="eroot" style="margin-top:16px"></div>
+ <div class="bar"><div><span id="st"></span><button class="alt" id="cancel">Back</button><button class="big" id="save">💾 Save to GitHub</button></div></div>
 </div>
 </main>
 
 <script>
-/* ============ 1) CHANGE YOUR LOGIN HERE ============ */
-const LOGIN_ID = "yuvi";
-const LOGIN_PASS = "yuvi123";
-
-/* ============ 2) ADD YOUR FILES HERE ============
-   Brand -> Model -> [ files ]
-   Copy one {...} line to add more files.            */
-const DATA = {
-  "Samsung": {
-    "SM-A125F": [
-      { title: "Combination File", url: "https://example.com/a125f-combo.zip", pass: "pass123" },
-      { title: "FRP File",         url: "https://example.com/a125f-frp.zip",   pass: "pass123" }
-    ],
-    "SM-A315F": [
-      { title: "Flash File", url: "https://example.com/a315f.zip", pass: "pass123" }
-    ]
-  },
-  "Xiaomi": {
-    "Redmi 9A": [
-      { title: "Flash File", url: "https://example.com/9a.zip", pass: "pass456" }
-    ]
-  }
-};
-/* ============ END – don't edit below ============ */
-
 const $=id=>document.getElementById(id);
-let brand=null,model=null;
-function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
-function login(){
- if($("uid").value.trim().toLowerCase()===LOGIN_ID.toLowerCase()&&$("pw").value===LOGIN_PASS){
-  $("login").classList.add("hide");$("app").classList.remove("hide");$("out").classList.remove("hide");render();
- }else $("err").textContent="Wrong ID or password";
+const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const e64=u=>{let s="";new Uint8Array(u).forEach(x=>s+=String.fromCharCode(x));return btoa(s)};
+const enc=new TextEncoder(),dec=new TextDecoder();
+let ENC=null,DATA=null,CUR=null,S=[],brand=null,model=null;
+/*C1*/
+async function dkey(id,pw,salt,usage,purpose){
+ const km=await crypto.subtle.importKey("raw",enc.encode(id.trim().toLowerCase()+":"+pw+(purpose||"")),"PBKDF2",false,["deriveKey"]);
+ return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:300000,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,usage);
 }
-$("go").onclick=login;$("pw").onkeydown=e=>e.key==="Enter"&&login();
+async function encryptData(obj,id,pw){
+ const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+ const k=await dkey(id,pw,salt,["encrypt"]);
+ const ct=await crypto.subtle.encrypt({name:"AES-GCM",iv},k,enc.encode(JSON.stringify(obj)));
+ return {v:1,salt:e64(salt),iv:e64(iv),data:e64(ct)};
+}
+async function decryptData(E,id,pw){
+ const k=await dkey(id,pw,b64(E.salt),["decrypt"]);
+ return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:b64(E.iv)},k,b64(E.data))));
+}
+const TSALT=enc.encode("fwy-token-salt-v1");
+async function saveTok(tok){
+ const iv=crypto.getRandomValues(new Uint8Array(12)),k=await dkey(CUR.id,CUR.pw,TSALT,["encrypt"],":tok");
+ const ct=await crypto.subtle.encrypt({name:"AES-GCM",iv},k,enc.encode(tok));
+ try{localStorage.setItem("fwy_tok",JSON.stringify({iv:e64(iv),data:e64(ct)}))}catch(e){}
+}
+async function loadTok(){
+ try{const o=JSON.parse(localStorage.getItem("fwy_tok")),k=await dkey(CUR.id,CUR.pw,TSALT,["decrypt"],":tok");
+  return dec.decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:b64(o.iv)},k,b64(o.data)))}catch(e){return ""}
+}
+/*C2*/
+async function push(E,repo,tok){
+ const u="https://api.github.com/repos/"+repo+"/contents/data.enc.json",H={Authorization:"Bearer "+tok,Accept:"application/vnd.github+json"};
+ let sha;const g=await fetch(u,{headers:H,cache:"no-store"});
+ if(g.ok)sha=(await g.json()).sha;
+ else if(g.status!==404)throw new Error(g.status===401||g.status===403?"Token wrong or no permission (needs Contents: Read & write)":"GitHub error "+g.status);
+ const p=await fetch(u,{method:"PUT",headers:H,body:JSON.stringify({message:"update data",content:btoa(JSON.stringify(E)),sha})});
+ if(!p.ok){const j=await p.json().catch(()=>({}));throw new Error((j.message||"Save failed")+" ("+p.status+"). Check repo name and token.")}
+}
+function guessRepo(){const p=location.pathname.split("/")[1];return location.hostname.endsWith(".github.io")&&p?location.hostname.split(".")[0]+"/"+p:""}
+function getRepo(){try{return localStorage.getItem("fwy_repo")||guessRepo()}catch(e){return guessRepo()}}
+function setRepo(r){try{localStorage.setItem("fwy_repo",r)}catch(e){}}
+function show(n){["setup","login","app","editor"].forEach(x=>$(x).classList.toggle("hide",x!==n));
+ const a=n==="app"||n==="editor";$("out").classList.toggle("hide",!a);$("mng").classList.toggle("hide",n!=="app")}
+async function boot(){
+ try{const r=await fetch("data.enc.json?t="+Date.now(),{cache:"no-store"});
+  if(r.status===404){$("s_repo").value=getRepo();show("setup");return}
+  if(!r.ok)throw 0;ENC=await r.json();show("login");
+ }catch(e){show("login");$("err").textContent="Could not load data. Refresh the page."}
+}
+$("setup").onsubmit=async e=>{e.preventDefault();const id=$("s_id").value.trim(),pw=$("s_pw").value,repo=$("s_repo").value.trim(),tok=$("s_tok").value.trim();
+ if(!id||pw.length<10||!repo||!tok)return $("s_err").textContent="Fill all boxes. Password needs 10+ characters.";
+ $("s_err").textContent="Saving…";
+ try{const obj={"Samsung":{"SM-A125F":[{title:"Example file",url:"https://example.com/file.zip",pass:"1234"}]}};
+  const E=await encryptData(obj,id,pw);await push(E,repo,tok);setRepo(repo);ENC=E;DATA=obj;CUR={id,pw};show("app");render();
+ }catch(x){$("s_err").textContent=x.message}};
+$("login").onsubmit=async e=>{e.preventDefault();$("err").textContent="Checking…";
+ try{const id=$("uid").value,pw=$("pw").value;DATA=await decryptData(ENC,id,pw);CUR={id:id.trim().toLowerCase(),pw};$("pw").value="";$("err").textContent="";brand=model=null;show("app");render()}
+ catch(x){$("err").textContent="Wrong ID or password"}};
 $("out").onclick=()=>location.reload();$("q").oninput=render;
+
+function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
 function copy(t,btn){
  const done=()=>{const o=btn.textContent;btn.textContent="Copied ✓";btn.classList.add("ok");setTimeout(()=>{btn.textContent=o;btn.classList.remove("ok")},1200)};
  const fb=()=>{const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove();done()};
@@ -92,12 +161,44 @@ function render(){
   if(f.pass){const r2=el("div","row");r2.append(el("code",null,"🔑 "+f.pass));
    const cp=el("button",null,"Copy Password");cp.onclick=()=>copy(f.pass,cp);r2.append(cp);d.append(r2)}
   v.append(d)});return}
- const g=el("div","grid");
- const items=brand?Object.keys(DATA[brand]):Object.keys(DATA);
+ const g=el("div","grid"),items=brand?Object.keys(DATA[brand]):Object.keys(DATA);
  items.filter(n=>n.toLowerCase().includes(q)).forEach(n=>{
   const t=el("div","tile");
   t.append(el("div",null,(brand?"📱 ":"📁 ")+n),el("small",null,brand?DATA[brand][n].length+" files":Object.keys(DATA[n]).length+" models"));
   t.onclick=()=>{brand?model=n:brand=n;$("q").value="";render()};g.append(t)});
  v.append(g);
 }
+
+/* ---------- Manage (editor) ---------- */
+function fromObj(o){return Object.keys(o).map(b=>({name:b,models:Object.keys(o[b]).map(m=>({name:m,files:o[b][m].map(f=>({title:f.title||"",url:f.url||"",pass:f.pass||""}))}))}))}
+function toObj(){const o={};S.forEach(b=>{const bn=b.name.trim();if(!bn)return;o[bn]=o[bn]||{};b.models.forEach(m=>{const mn=m.name.trim();if(!mn)return;o[bn][mn]=m.files.filter(f=>f.url.trim()).map(f=>({title:f.title.trim()||"File",url:f.url.trim(),pass:f.pass.trim()}))})});return o}
+function inp(v,ph,fn){const i=el("input");i.value=v||"";i.placeholder=ph;i.oninput=()=>fn(i.value);return i}
+function btn(x,c,fn){const b=el("button",c,x);b.onclick=fn;return b}
+function addBrand(){S.push({name:"",models:[{name:"",files:[{title:"",url:"",pass:""}]}]});rEd();window.scrollTo(0,document.body.scrollHeight)}
+function rEd(){const root=$("eroot");root.innerHTML="";
+ S.forEach((b,bi)=>{const bc=el("div","brand"),bh=el("div","bh");
+  bh.append(el("span",null,"📁"),inp(b.name,"Brand name (e.g. Samsung)",v=>b.name=v),btn("Delete brand","del",()=>{if(confirm("Delete this brand?")){S.splice(bi,1);rEd()}}));bc.append(bh);
+  b.models.forEach((m,mi)=>{const mc=el("div","model"),mh=el("div","mh");
+   mh.append(el("span",null,"📱"),inp(m.name,"Model (e.g. SM-A125F)",v=>m.name=v),btn("Delete model","del",()=>{b.models.splice(mi,1);rEd()}));mc.append(mh);
+   m.files.forEach((f,fi)=>{const r=el("div","ef");
+    r.append(inp(f.title,"File title",v=>f.title=v),inp(f.url,"File link (https://…)",v=>f.url=v),inp(f.pass,"File password",v=>f.pass=v),btn("✕","del",()=>{m.files.splice(fi,1);rEd()}));mc.append(r)});
+   const add=btn("＋ Add file","alt",()=>{m.files.push({title:"",url:"",pass:""});rEd()});add.style.marginTop="10px";mc.append(add);bc.append(mc)});
+  const am=btn("＋ Add model","alt",()=>{b.models.push({name:"",files:[{title:"",url:"",pass:""}]});rEd()});am.style.marginTop="12px";bc.append(am);root.append(bc)});
+}
+$("mng").onclick=async()=>{S=fromObj(DATA);rEd();$("e_repo").value=getRepo();$("e_nid").value="";$("e_npw").value="";$("st").textContent="";
+ const t=await loadTok();$("e_tok").value=t;$("e_rem").checked=!!t;show("editor")};
+$("cancel").onclick=()=>{brand=model=null;show("app");render()};
+$("save").onclick=async()=>{
+ const st=$("st"),repo=$("e_repo").value.trim(),tok=$("e_tok").value.trim(),nid=$("e_nid").value.trim()||CUR.id,npw=$("e_npw").value||CUR.pw;
+ if(!repo||!tok)return st.textContent="Enter GitHub repo and token.";
+ if(npw.length<10)return st.textContent="Password needs 10+ characters.";
+ const obj=toObj();if(!Object.keys(obj).length)return st.textContent="Add at least one brand.";
+ st.textContent="Saving…";$("save").disabled=true;
+ try{const E=await encryptData(obj,nid,npw);await push(E,repo,tok);
+  ENC=E;DATA=obj;CUR={id:nid.toLowerCase(),pw:npw};setRepo(repo);
+  if($("e_rem").checked)await saveTok(tok);else try{localStorage.removeItem("fwy_tok")}catch(e){}
+  $("e_nid").value="";$("e_npw").value="";st.textContent="✅ Saved. Visitors see it in about 1 minute.";
+ }catch(x){st.textContent="❌ "+x.message}
+ $("save").disabled=false};
+boot();
 </script></body></html>
