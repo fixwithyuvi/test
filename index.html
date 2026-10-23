@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FIXWITHYUVI – GSM Files</title>
+<style>
+:root{--bg:#0f1220;--card:#181c30;--tx:#e9ecff;--mu:#8b92b8;--ac:#4f8cff;--ok:#2ecc71;--bd:#272c4a}
+@media(prefers-color-scheme:light){:root{--bg:#f2f4fb;--card:#fff;--tx:#161a33;--mu:#5d6488;--bd:#dfe3f3}}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--tx)}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--bd)}
+header b span{color:var(--ac)}main{max-width:900px;margin:0 auto;padding:18px}
+button,input{font:inherit}button{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer}
+button.alt{background:transparent;color:var(--tx);border:1px solid var(--bd)}button.ok{background:var(--ok)}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx);margin:6px 0}
+.login{max-width:340px;margin:12vh auto;background:var(--card);padding:24px;border-radius:14px;border:1px solid var(--bd);text-align:center}
+.err{color:#ff5c6c;min-height:20px;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:12px}
+.tile{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:18px 10px;text-align:center;cursor:pointer}
+.tile:hover{border-color:var(--ac)}.tile small{display:block;color:var(--mu);margin-top:4px}
+.crumb{color:var(--mu);margin:4px 0 10px}.crumb a{color:var(--ac);cursor:pointer}
+.file{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-top:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.row code{flex:1;min-width:140px;overflow-wrap:anywhere;background:var(--bg);padding:7px 10px;border-radius:8px;font-size:13px}
+.hide{display:none}
+</style></head><body>
+<header><b>FIX<span>WITH</span>YUVI</b><button class="alt hide" id="out">Logout</button></header>
+<main>
+<div class="login" id="login">
+ <h3>🔒 Private Access</h3>
+ <input id="uid" placeholder="ID">
+ <input id="pw" type="password" placeholder="Password">
+ <button id="go" style="width:100%;margin-top:6px">Login</button>
+ <div class="err" id="err"></div>
+</div>
+<div id="app" class="hide">
+ <input id="q" placeholder="Search…">
+ <div class="crumb" id="crumb"></div>
+ <div id="view"></div>
+</div>
+</main>
+
+<script>
+/* ============ 1) CHANGE YOUR LOGIN HERE ============ */
+const LOGIN_ID = "yuvi";
+const LOGIN_PASS = "yuvi123";
+
+/* ============ 2) ADD YOUR FILES HERE ============
+   Brand -> Model -> [ files ]
+   Copy one {...} line to add more files.            */
+const DATA = {
+  "Samsung": {
+    "SM-A125F": [
+      { title: "Combination File", url: "https://example.com/a125f-combo.zip", pass: "pass123" },
+      { title: "FRP File",         url: "https://example.com/a125f-frp.zip",   pass: "pass123" }
+    ],
+    "SM-A315F": [
+      { title: "Flash File", url: "https://example.com/a315f.zip", pass: "pass123" }
+    ]
+  },
+  "Xiaomi": {
+    "Redmi 9A": [
+      { title: "Flash File", url: "https://example.com/9a.zip", pass: "pass456" }
+    ]
+  }
+};
+/* ============ END – don't edit below ============ */
+
+const $=id=>document.getElementById(id);
+let brand=null,model=null;
+function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+function login(){
+ if($("uid").value.trim().toLowerCase()===LOGIN_ID.toLowerCase()&&$("pw").value===LOGIN_PASS){
+  $("login").classList.add("hide");$("app").classList.remove("hide");$("out").classList.remove("hide");render();
+ }else $("err").textContent="Wrong ID or password";
+}
+$("go").onclick=login;$("pw").onkeydown=e=>e.key==="Enter"&&login();
+$("out").onclick=()=>location.reload();$("q").oninput=render;
+function copy(t,btn){
+ const done=()=>{const o=btn.textContent;btn.textContent="Copied ✓";btn.classList.add("ok");setTimeout(()=>{btn.textContent=o;btn.classList.remove("ok")},1200)};
+ const fb=()=>{const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove();done()};
+ navigator.clipboard?navigator.clipboard.writeText(t).then(done).catch(fb):fb();
+}
+function render(){
+ const v=$("view"),c=$("crumb"),q=$("q").value.toLowerCase();v.innerHTML="";c.innerHTML="";
+ const h=el("a",null,"📁 All Brands");h.onclick=()=>{brand=model=null;$("q").value="";render()};c.append(h);
+ if(brand){c.append(" / ");const a=el("a",null,brand);a.onclick=()=>{model=null;$("q").value="";render()};c.append(a)}
+ if(model)c.append(" / "+model);
+ if(model){DATA[brand][model].forEach(f=>{
+  const d=el("div","file");d.append(el("b",null,f.title));
+  const r=el("div","row");r.append(el("code",null,f.url));
+  const cl=el("button",null,"Copy Link");cl.onclick=()=>copy(f.url,cl);
+  const op=el("button","alt","Open");op.onclick=()=>window.open(f.url,"_blank","noopener");r.append(cl,op);d.append(r);
+  if(f.pass){const r2=el("div","row");r2.append(el("code",null,"🔑 "+f.pass));
+   const cp=el("button",null,"Copy Password");cp.onclick=()=>copy(f.pass,cp);r2.append(cp);d.append(r2)}
+  v.append(d)});return}
+ const g=el("div","grid");
+ const items=brand?Object.keys(DATA[brand]):Object.keys(DATA);
+ items.filter(n=>n.toLowerCase().includes(q)).forEach(n=>{
+  const t=el("div","tile");
+  t.append(el("div",null,(brand?"📱 ":"📁 ")+n),el("small",null,brand?DATA[brand][n].length+" files":Object.keys(DATA[n]).length+" models"));
+  t.onclick=()=>{brand?model=n:brand=n;$("q").value="";render()};g.append(t)});
+ v.append(g);
+}
+</script></body></html>
