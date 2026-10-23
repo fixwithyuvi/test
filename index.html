@@ -3,37 +3,53 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>FIXWITHYUVI</title>
 <style>
-:root{--bg:#0f1220;--card:#181c30;--card2:#20253f;--tx:#e9ecff;--mu:#8b92b8;--ac:#4f8cff;--ok:#2ecc71;--bad:#ff5c6c;--bd:#2c3253}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--tx)}
-header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--bd);position:sticky;top:0;background:var(--bg);z-index:5}
-header b span{color:var(--ac)}header div{display:flex;gap:8px}
-main{max-width:920px;margin:0 auto;padding:18px 16px 110px}
-button{font:inherit;border:0;border-radius:8px;padding:8px 14px;cursor:pointer;background:var(--ac);color:#fff}
-button.alt{background:transparent;border:1px solid var(--bd);color:var(--tx)}button.alt:hover{border-color:var(--ac)}
-button.ok{background:var(--ok)}button.del{background:transparent;color:var(--bad);padding:6px 10px}
-button.big{padding:12px 22px;font-weight:600;background:var(--ok)}
-input{font:inherit;width:100%;padding:10px 11px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);margin:4px 0}
-input:focus{outline:none;border-color:var(--ac)}
-.box{max-width:360px;margin:9vh auto;background:var(--card);padding:24px;border-radius:14px;border:1px solid var(--bd);text-align:center}
-.box h3{margin-top:0}.box p{color:var(--mu);font-size:13px}
-.err{color:var(--bad);min-height:20px;font-size:14px}.hide{display:none!important}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:12px}
-.tile{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:18px 10px;text-align:center;cursor:pointer}
-.tile:hover{border-color:var(--ac)}.tile small{display:block;color:var(--mu);margin-top:4px}
-.crumb{color:var(--mu);margin:4px 0 10px}.crumb a{color:var(--ac);cursor:pointer}
-.file{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-top:12px}
-.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
-.row code{flex:1;min-width:140px;overflow-wrap:anywhere;background:var(--bg);padding:7px 10px;border-radius:8px;font-size:13px}
-.brand{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:16px}
-.bh,.mh{display:flex;gap:8px;align-items:center}.bh input{font-size:17px;font-weight:600}
-.model{background:var(--card2);border-radius:12px;padding:12px;margin-top:12px}
+:root{--bg:#0a0d1c;--card:#141934;--card2:#1b2142;--tx:#eef0ff;--mu:#8f97c2;--ac:#5b8cff;--ac2:#8b5cf6;--ok:#22c55e;--bad:#ff5c6c;--bd:#272e57}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,"Segoe UI",sans-serif;color:var(--tx);min-height:100vh;
+ background:radial-gradient(900px 500px at 10% -10%,#1d2a6b55,transparent),radial-gradient(800px 500px at 100% 0,#5b2a9a44,transparent),var(--bg);background-attachment:fixed}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 26px;position:sticky;top:0;z-index:5;
+ background:#0a0d1ccc;backdrop-filter:blur(12px);border-bottom:1px solid var(--bd)}
+header b{font-size:21px;font-weight:800;letter-spacing:.6px}
+header b span{background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
+header div{display:flex;gap:10px}
+main{max-width:1100px;margin:0 auto;padding:26px 18px 120px}
+button{font:inherit;font-weight:600;border:0;border-radius:10px;padding:9px 16px;cursor:pointer;color:#fff;
+ background:linear-gradient(135deg,var(--ac),var(--ac2));transition:.15s;box-shadow:0 4px 14px #5b8cff33}
+button:hover{transform:translateY(-1px);filter:brightness(1.1)}
+button.alt{background:#ffffff08;border:1px solid var(--bd);color:var(--tx);box-shadow:none}
+button.alt:hover{border-color:var(--ac);background:#5b8cff18}
+button.ok{background:var(--ok);box-shadow:none}
+button.del{background:transparent;color:var(--bad);box-shadow:none;padding:6px 10px}
+button.big{padding:12px 24px;background:linear-gradient(135deg,#22c55e,#16a34a)}
+button:disabled{opacity:.6;cursor:wait}
+input{font:inherit;width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--bd);background:#0a0d1c99;color:var(--tx);margin:5px 0;transition:.15s}
+input:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px #5b8cff2a}
+.box{max-width:380px;margin:9vh auto;background:#141934cc;backdrop-filter:blur(10px);padding:30px 26px;border-radius:20px;border:1px solid var(--bd);text-align:center;box-shadow:0 20px 60px #0008}
+.box h3{margin:0 0 14px;font-size:22px}.box p{color:var(--mu);font-size:13px;margin-top:0}
+.err{color:var(--bad);min-height:22px;font-size:14px;margin-top:8px}.hide{display:none!important}
+.hero{margin:6px 0 20px}.hero h1{margin:0;font-size:30px;font-weight:800}.hero p{margin:6px 0 0;color:var(--mu)}
+#q{padding:14px 16px;font-size:16px;border-radius:14px;background:var(--card)}
+.crumb{color:var(--mu);margin:14px 2px 6px;font-size:15px}.crumb a{color:var(--ac);cursor:pointer;font-weight:600}.crumb a:hover{text-decoration:underline}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px;margin-top:14px}
+.tile{background:linear-gradient(160deg,var(--card),var(--card2));border:1px solid var(--bd);border-radius:18px;padding:22px 14px;text-align:center;cursor:pointer;transition:.2s}
+.tile:hover{transform:translateY(-4px);border-color:var(--ac);box-shadow:0 12px 30px #5b8cff30}
+.badge{width:54px;height:54px;border-radius:16px;margin:0 auto 12px;display:grid;place-items:center;font-size:24px;font-weight:800;color:#fff;box-shadow:0 6px 16px #0006}
+.tn{font-weight:700;font-size:16px;overflow-wrap:anywhere}.tile small{display:block;color:var(--mu);margin-top:6px}
+.empty{color:var(--mu);text-align:center;padding:40px 0}
+.file{background:linear-gradient(160deg,var(--card),var(--card2));border:1px solid var(--bd);border-radius:16px;padding:18px;margin-top:16px}
+.ft{display:flex;align-items:center;gap:10px;font-size:17px}.fi{font-size:22px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.row code{flex:1;min-width:160px;overflow-wrap:anywhere;background:#0a0d1caa;border:1px solid var(--bd);padding:10px 12px;border-radius:10px;font-size:13.5px}
+.brand{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;margin-bottom:18px}
+.bh,.mh{display:flex;gap:8px;align-items:center}.bh input{font-size:17px;font-weight:700}
+.model{background:var(--card2);border-radius:14px;padding:14px;margin-top:14px}
 .ef{display:grid;grid-template-columns:1.1fr 2fr 1fr auto;gap:8px;margin-top:6px}
-.set{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:16px}
-.set label{font-size:13px;color:var(--mu)}.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--bd);padding:12px}
-.bar div{max-width:920px;margin:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.set{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;margin-bottom:18px}
+.set label{font-size:13px;color:var(--mu)}.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#0a0d1cee;backdrop-filter:blur(12px);border-top:1px solid var(--bd);padding:12px}
+.bar div{max-width:1100px;margin:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 #st{flex:1;font-size:14px;color:var(--mu)}
-@media(max-width:640px){.ef,.g2{grid-template-columns:1fr}}
+@media(max-width:640px){.ef,.g2{grid-template-columns:1fr}header{padding:12px 14px}.grid{grid-template-columns:repeat(2,1fr);gap:12px}.hero h1{font-size:24px}}
 </style></head><body>
 <header><b>FIX<span>WITH</span>YUVI</b>
  <div><button class="alt hide" id="mng">⚙ Manage</button><button class="alt hide" id="out">Logout</button></div></header>
@@ -59,6 +75,7 @@ input:focus{outline:none;border-color:var(--ac)}
 </form>
 
 <div id="app" class="hide">
+ <div class="hero"><h1>📂 GSM Files</h1><p id="stats"></p></div>
  <input id="q" placeholder="Search…">
  <div class="crumb" id="crumb"></div><div id="view"></div>
 </div>
@@ -148,13 +165,14 @@ function copy(t,btn){
  const fb=()=>{const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove();done()};
  navigator.clipboard?navigator.clipboard.writeText(t).then(done).catch(fb):fb();
 }
+function hue(n){let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))%360;return h}
 function render(){
  const v=$("view"),c=$("crumb"),q=$("q").value.toLowerCase();v.innerHTML="";c.innerHTML="";
  const h=el("a",null,"📁 All Brands");h.onclick=()=>{brand=model=null;$("q").value="";render()};c.append(h);
  if(brand){c.append(" / ");const a=el("a",null,brand);a.onclick=()=>{model=null;$("q").value="";render()};c.append(a)}
  if(model)c.append(" / "+model);
  if(model){DATA[brand][model].forEach(f=>{
-  const d=el("div","file");d.append(el("b",null,f.title));
+  const d=el("div","file"),tt=el("div","ft");tt.append(el("span","fi","📦"),el("b",null,f.title));d.append(tt);
   const r=el("div","row");r.append(el("code",null,f.url));
   const cl=el("button",null,"Copy Link");cl.onclick=()=>copy(f.url,cl);
   const op=el("button","alt","Open");op.onclick=()=>window.open(f.url,"_blank","noopener");r.append(cl,op);d.append(r);
@@ -163,10 +181,13 @@ function render(){
   v.append(d)});return}
  const g=el("div","grid"),items=brand?Object.keys(DATA[brand]):Object.keys(DATA);
  items.filter(n=>n.toLowerCase().includes(q)).forEach(n=>{
-  const t=el("div","tile");
-  t.append(el("div",null,(brand?"📱 ":"📁 ")+n),el("small",null,brand?DATA[brand][n].length+" files":Object.keys(DATA[n]).length+" models"));
+  const t=el("div","tile"),bd=el("div","badge",brand?"📱":(n[0]||"?").toUpperCase());
+  if(!brand){const k=hue(n);bd.style.background="linear-gradient(135deg,hsl("+k+" 80% 62%),hsl("+(k+50)%360+" 80% 48%))"}else bd.style.background="linear-gradient(135deg,#5b8cff,#8b5cf6)";
+  t.append(bd,el("div","tn",n),el("small",null,brand?DATA[brand][n].length+" files":Object.keys(DATA[n]).length+" models"));
   t.onclick=()=>{brand?model=n:brand=n;$("q").value="";render()};g.append(t)});
- v.append(g);
+ if(!g.children.length)v.append(el("div","empty","Nothing found"));else v.append(g);
+ let nb=Object.keys(DATA).length,nm=0,nf=0;Object.keys(DATA).forEach(b=>Object.keys(DATA[b]).forEach(m=>{nm++;nf+=DATA[b][m].length}));
+ $("stats").textContent=nb+" brands · "+nm+" models · "+nf+" files";
 }
 
 /* ---------- Manage (editor) ---------- */
