@@ -112,10 +112,10 @@ async function loadTok(){
   return dec.decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:b64(o.iv)},k,b64(o.data)))}catch(e){return ""}
 }
 /*C2*/
-async function push(E,repo,tok){
+async function push(E,repo,tok,noOverwrite){
  const u="https://api.github.com/repos/"+repo+"/contents/data.enc.json",H={Authorization:"Bearer "+tok,Accept:"application/vnd.github+json"};
  let sha;const g=await fetch(u,{headers:H,cache:"no-store"});
- if(g.ok)sha=(await g.json()).sha;
+ if(g.ok){if(noOverwrite)throw new Error("Already set up. Wait 1-2 minutes, then refresh with Ctrl+F5 and log in.");sha=(await g.json()).sha}
  else if(g.status!==404)throw new Error(g.status===401||g.status===403?"Token wrong or no permission (needs Contents: Read & write)":"GitHub error "+g.status);
  const p=await fetch(u,{method:"PUT",headers:H,body:JSON.stringify({message:"update data",content:btoa(JSON.stringify(E)),sha})});
  if(!p.ok){const j=await p.json().catch(()=>({}));throw new Error((j.message||"Save failed")+" ("+p.status+"). Check repo name and token.")}
@@ -127,7 +127,7 @@ function show(n){["setup","login","app","editor"].forEach(x=>$(x).classList.togg
  const a=n==="app"||n==="editor";$("out").classList.toggle("hide",!a);$("mng").classList.toggle("hide",n!=="app")}
 async function boot(){
  try{const r=await fetch("data.enc.json?t="+Date.now(),{cache:"no-store"});
-  if(r.status===404){$("s_repo").value=getRepo();show("setup");return}
+  if(r.status===404){let d=0;try{d=localStorage.getItem("fwy_setup")}catch(e){}if(d){show("login");$("err").textContent="Site is still updating. Wait 1-2 minutes, then press Ctrl+F5.";return}$("s_repo").value=getRepo();show("setup");return}
   if(!r.ok)throw 0;ENC=await r.json();show("login");
  }catch(e){show("login");$("err").textContent="Could not load data. Refresh the page."}
 }
@@ -135,7 +135,7 @@ $("setup").onsubmit=async e=>{e.preventDefault();const id=$("s_id").value.trim()
  if(!id||pw.length<10||!repo||!tok)return $("s_err").textContent="Fill all boxes. Password needs 10+ characters.";
  $("s_err").textContent="Saving…";
  try{const obj={"Samsung":{"SM-A125F":[{title:"Example file",url:"https://example.com/file.zip",pass:"1234"}]}};
-  const E=await encryptData(obj,id,pw);await push(E,repo,tok);setRepo(repo);ENC=E;DATA=obj;CUR={id,pw};show("app");render();
+  const E=await encryptData(obj,id,pw);await push(E,repo,tok,true);setRepo(repo);try{localStorage.setItem("fwy_setup","1")}catch(e){}ENC=E;DATA=obj;CUR={id,pw};show("app");render();
  }catch(x){$("s_err").textContent=x.message}};
 $("login").onsubmit=async e=>{e.preventDefault();$("err").textContent="Checking…";
  try{const id=$("uid").value,pw=$("pw").value;DATA=await decryptData(ENC,id,pw);CUR={id:id.trim().toLowerCase(),pw};$("pw").value="";$("err").textContent="";brand=model=null;show("app");render()}
